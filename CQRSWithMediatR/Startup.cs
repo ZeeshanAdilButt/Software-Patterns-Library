@@ -1,4 +1,5 @@
 using CQRS.Context;
+using CQRSWithMediatR.PipelineBehaviours;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -57,8 +58,8 @@ namespace source
 
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
 
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
