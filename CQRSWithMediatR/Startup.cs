@@ -1,5 +1,6 @@
 using CQRS.Context;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +29,9 @@ namespace source
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
+
+           
+
             #region Swagger
             services.AddSwaggerGen(c =>
             {
@@ -43,7 +47,13 @@ namespace source
             services.AddScoped<IApplicationContext>(provider => provider.GetService<ApplicationContext>());
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
-            services.AddControllers();
+
+            services.AddControllers()
+               .AddFluentValidation(s =>
+               {
+                   s.RegisterValidatorsFromAssemblyContaining<Startup>();
+                   s.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+               });
 
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
 
